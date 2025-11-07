@@ -44,7 +44,6 @@ master-alias load
 3. Load into current shell and use it immediately:
 
 ```bash
-source ~/.master-alias/master_aliases.sh
 hello-world "Mauricio"
 # => Hello world, Mauricio
 ```
@@ -79,8 +78,7 @@ Example generated snippet (inside `~/.master-alias/master_aliases.sh`):
 
 ```bash
 # --- master-alias generated start ---
-alias ll='ls -la'
-hello-world() { echo "Hello world, \"$1\""; }
+alias hello-world='master-alias run hello-world'
 # --- master-alias generated end ---
 ```
 
