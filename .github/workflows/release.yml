@@ -1,0 +1,71 @@
+name: Build and Release Master Alias
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # Exemplo: v1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: [amd64, arm64]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22' # ajuste se usar outra versão
+
+      - name: Build binary
+        run: |
+          mkdir -p dist
+          binary_name=master-alias-${{ matrix.goos }}-${{ matrix.goarch }}
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            binary_name="${binary_name}.exe"
+          fi
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -ldflags="-s -w" -o dist/$binary_name
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: master-alias-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/*
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/**
+          name: Release ${{ github.ref_name }}
+          body: |
+            🚀 **Master Alias** ${{ github.ref_name }}
+            
+            ### Novidades
+            - Veja o changelog completo nos commits desta tag.
+
+            ### Downloads
+            - `master-alias-linux-amd64`
+            - `master-alias-linux-arm64`
+            - `master-alias-windows-amd64.exe`
+            - `master-alias-darwin-arm64`
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
