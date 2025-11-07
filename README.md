@@ -89,22 +89,6 @@ The CLI uses a standard command structure. The following commands are available 
 
 ---
 
-## How aliases are stored and generated
-
-- Aliases are persisted as JSON objects in `~/.master-alias/alias.json` with fields like `id`, `name`, `command`, `type`, and `description` (depending on implementation).
-- When the tool writes `~/.master-alias/master_aliases.sh`, it decides between writing a simple alias or a shell function:
-  - Simple commands without shell parameter usage or special characters are written as:
-
-    alias name='some simple command'
-
-  - Commands that include positional parameters (`$1`, `$@`) or shell metacharacters (`|`, `>`, `&`, `;`, etc.) are written as functions to preserve argument handling and quoting, for example:
-
-    name() { docker exec -t "$1" bash; }
-
-- The generator marks the generated region with comments so it's possible to identify entries created by `master-alias`.
-
----
-
 ## The `load` command — full behavior, example and recommendations
 
 The `load` command is the main helper to make your shell automatically source the generated alias file located at `~/.master-alias/master_aliases.sh`. Below is a clear explanation of exactly what `load` should do and a concrete example based on your `hello-world` alias.
@@ -168,49 +152,6 @@ Notes and safety
 
 ---
 
-## Examples and common workflows
-
-1) Initialize and enable autoload:
-
-```bash
-master-alias init
-master-alias load
-# then reload your shell, or:
-source ~/.zshrc   # or source ~/.bashrc
-```
-
-2) Add and run an alias using a positional parameter:
-
-```bash
-master-alias add dk-fpm "docker exec -t $1 bash"
-master-alias run dk-fpm my-container
-# Equivalent to running: docker exec -t my-container bash
-```
-
-3) Add an alias that forwards all arguments:
-
-```bash
-master-alias add ll "ls -la $@"
-master-alias run ll /tmp -h
-# Equivalent to running: ls -la /tmp -h
-```
-
-4) List and remove aliases:
-
-```bash
-master-alias list
-master-alias remove 5
-master-alias remove dk-fpm
-```
-
-5) Import / export via GitHub Gist (if supported):
-
-```bash
-master-alias gist export <GIST_ID>
-master-alias gist import <GIST_ID>
-```
-
----
 
 ## Troubleshooting
 
