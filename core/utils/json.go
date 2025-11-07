@@ -108,7 +108,7 @@ func FindById(filename, id string) structs.Alias {
 	// Procura o alias pelo nome
 	for _, a := range aliases {
 		if a.Id == id {
-			return structs.Alias{Id: id, Name: a.Name, Command: a.Command}
+			return structs.Alias{Id: a.Id, Name: a.Name, Command: a.Command}
 		}
 	}
 
@@ -133,7 +133,7 @@ func FindByName(filename, name string) structs.Alias {
 	// Procura o alias pelo nome
 	for _, a := range aliases {
 		if a.Name == name {
-			return structs.Alias{Name: a.Name, Command: a.Command}
+			return structs.Alias{Id: a.Id, Name: a.Name, Command: a.Command}
 		}
 	}
 

@@ -52,5 +52,6 @@ func loadSourceAliases() {
 	}
 
 	fmt.Println("Aliases atualizados! Execute o comando abaixo para carregar:")
+	fmt.Println("# => source ~/.master-alias/master_aliases.sh")
 
 }

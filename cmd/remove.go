@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/fatih/color"
 	"master-alias.com/core"
 	"master-alias.com/core/utils"
@@ -13,18 +15,23 @@ func init() {
 }
 
 var removeCmd = &cobra.Command{
-	Use:   "remove [ID]",
-	Short: "Remove an alias by ID",
+	Use:   "remove [ID|NAME]",
+	Short: "Remove an alias by ID|NAME",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		removeAlias(args[0])
 	},
 }
 
-func removeAlias(id string) {
-	alias := utils.FindById(core.FILENAME, id)
+func removeAlias(index string) {
+	alias := utils.FindById(core.FILENAME, index)
 
-	utils.RemoveItem(core.FILENAME, id)
+	if alias.Id == "" {
+		alias = utils.FindByName(core.FILENAME, index)
+	}
+
+	utils.RemoveItem(core.FILENAME, alias.Id)
+	fmt.Println(alias.Name)
 	utils.RemoveAliasFromFile(alias.Name)
 
 	c := color.New(color.FgGreen)

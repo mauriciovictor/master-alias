@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -29,8 +28,6 @@ func EnsureShellSource() error {
 	filePath := filepath.Join(home, ".master-alias", "master_aliases.sh")
 
 	line := fmt.Sprintf("source %s", filePath)
-
-	exec.Command("bash", "-c", line)
 
 	if !strings.Contains(string(content), line) {
 		f, err := os.OpenFile(rcPath, os.O_APPEND|os.O_WRONLY, 0644)
@@ -93,7 +90,7 @@ func RemoveAliasFromFile(name string) error {
 		return err
 	}
 
-	aliasFile := filepath.Join(home, ".master_aliases.sh")
+	aliasFile := filepath.Join(home, ".master-alias", "master_aliases.sh")
 
 	input, err := os.Open(aliasFile)
 	if err != nil {
